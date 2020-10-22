@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import classes from './App.css';
-import Person from './Person/Person';
+import Persons from './Persons/Persons';
 
 
 class App extends Component {
@@ -67,19 +67,15 @@ class App extends Component {
 
     let persons = null;
 
-    if (this.state.showPersons) {
-      btnClasses.push(classes.Green)
 
-      persons = (
-        <div>
-          {
-            this.state.Persons.map((person, index) => {
-              return <Person key={person.id} name={person.name} age={person.age} deletePersonHandler={() => this.deletePersonHandler(index)}
-                nameChangeHandler={(event) => this.nameChangeHandler(event, person.id)} />
-            })
-          }
-        </div>
-      );
+    if (this.state.showPersons) {
+
+      persons = <Persons persons = { this.state.Persons } deletePersonHandler = { this.deletePersonHandler } 
+      nameChangeHandler = { this.nameChangeHandler }/>
+    
+
+      btnClasses.push(classes.Green)
+     
     }
 
     const assignedClasses = [];
@@ -93,8 +89,8 @@ class App extends Component {
     return (
       <div className={classes.App}>
         <h1>I am a React App</h1>
-        <h2 className={assignedClasses.join(' ')}>This is a Person Component</h2>
-        <button className={btnClasses.join(' ')} onClick={this.togglePersonHandler}> Toggle Person </button>
+        <h2 className = { assignedClasses.join(' ') }> This is a Person Component </h2>
+        <button className = { btnClasses.join(' ') } onClick = { this.togglePersonHandler }> Toggle Person </button>
         {persons}
       </div> 
     );
