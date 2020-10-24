@@ -6,6 +6,32 @@ import Cockpit from '../Cockpit/Cockpit';
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+    console.log('[App.js] constructor');
+    /* can set state like this also
+    this.setState = {
+      Persons: [
+        { id: 0, name: 'Ritik', age: 23 },
+        { id: 1, name: 'Rohit', age: 22 },
+        { id: 2, name: 'Dino', age: 24 }
+      ],
+      otherState: 'Other State',
+      showPersons: true
+    } */
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
+  };
+
+  componentDidMount() {
+    console.log('[App.js] componentDidMount');
+  };
+
+
+
   state = {
     Persons: [
       { id: 0, name: 'Ritik', age: 23 },
@@ -64,25 +90,21 @@ class App extends Component {
 
   render() {
     /**Inline Style */
-    const btnClasses = [classes.Button];
+    console.log('[App.js] render');
 
     let persons = null;
-
 
     if (this.state.showPersons) {
 
       persons = <Persons persons={this.state.Persons} deletePersonHandler={this.deletePersonHandler}
-        nameChangeHandler={this.nameChangeHandler} />
-
-
-      btnClasses.push(classes.Green)
+      nameChangeHandler={this.nameChangeHandler} />
 
     }
 
     return (
       <div className={classes.App}>
         <Cockpit showPersons={this.state.showPersons} personsLength={this.state.Persons.length}
-          togglePersonHandler={this.togglePersonHandler} />
+          togglePersonHandler={this.togglePersonHandler} title={this.props.title} />
         {persons}
       </div>
     );
