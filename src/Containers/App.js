@@ -30,8 +30,15 @@ class App extends Component {
     console.log('[App.js] componentDidMount');
   };
 
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('[App.js] shouldComponentUpdate');
+    return true;
+  };
 
-
+  componentDidUpdate() {
+    console.log('[App.js] componentDidUpdate');
+  };
+  
   state = {
     Persons: [
       { id: 0, name: 'Ritik', age: 23 },
@@ -39,7 +46,7 @@ class App extends Component {
       { id: 2, name: 'Dino', age: 24 }
     ],
     otherState: 'Other State',
-    showPersons: true
+    showPersons: false
   };
 
   switchNameHandler = (newName) => {

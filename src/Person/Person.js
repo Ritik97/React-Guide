@@ -1,20 +1,24 @@
-import React from 'react';
+import React, {Component}  from 'react';
 import classes from './Person.css';
 
+/** To be able to use the lifecycle hooks in person component, we'll first chnage this to a class component */
 
-const person = (props) => {
+class Person extends Component{
 
-    return (
-        <div className={classes.Person}>
-            <p onClick={props.deletePersonHandler}>My name is {props.name} </p>
-            <p>My age is {props.age} </p>
-            <p> {props.children} </p>
-            <input onChange={props.nameChangeHandler} value={props.name}></input>
-        </div>
-    );
+    render() {
+        return (
+            <div className={classes.Person}>
+                <p onClick={this.props.deletePersonHandler}>My name is {this.props.name} </p>
+                <p>My age is {this.props.age} </p>
+                <p> {this.props.children} </p>
+                <input onChange={this.props.nameChangeHandler} value={this.props.name}></input>
+            </div>
+        );
+    };
+
 };
 
-export default person;
+export default Person;
 
 
 
