@@ -11,6 +11,9 @@ const cockpit = (props) => {
         setTimeout(() =>{
             alert('Data Saved to Cloud');
         }, 1000);
+        return () => {
+            console.log('[Cleanup Work] cockpit');
+        }
     }, [props.personsLength]);
 
     let assignedClasses = [];
