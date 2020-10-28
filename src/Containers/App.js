@@ -30,6 +30,11 @@ class App extends Component {
     console.log('[App.js] componentDidMount');
   };
 
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('[App.js] getSnapshotBeforeUpdate');
+    return null;
+};
+
   shouldComponentUpdate(nextProps, nextState) {
     console.log('[App.js] shouldComponentUpdate');
     return true;
@@ -38,7 +43,7 @@ class App extends Component {
   componentDidUpdate() {
     console.log('[App.js] componentDidUpdate');
   };
-  
+
   state = {
     Persons: [
       { id: 0, name: 'Ritik', age: 23 },
@@ -46,7 +51,8 @@ class App extends Component {
       { id: 2, name: 'Dino', age: 24 }
     ],
     otherState: 'Other State',
-    showPersons: false
+    showPersons: true,
+    removeCockpit: true
   };
 
   switchNameHandler = (newName) => {
@@ -95,6 +101,14 @@ class App extends Component {
     });
   };
 
+  removeCockpit = () => {
+    console.log('Cockpit Toggled');
+    let cockpit = this.state.removeCockpit;
+    this.setState({
+      removeCockpit: !cockpit
+    });
+  };
+
   render() {
     /**Inline Style */
     console.log('[App.js] render');
@@ -104,14 +118,17 @@ class App extends Component {
     if (this.state.showPersons) {
 
       persons = <Persons persons={this.state.Persons} deletePersonHandler={this.deletePersonHandler}
-      nameChangeHandler={this.nameChangeHandler} />
+        nameChangeHandler={this.nameChangeHandler} />
 
     }
 
     return (
       <div className={classes.App}>
+        <button onClick={this.removeCockpit}>Toggle Cockpit</button>
+        { this.state.removeCockpit ? (
         <Cockpit showPersons={this.state.showPersons} personsLength={this.state.Persons.length}
-          togglePersonHandler={this.togglePersonHandler} title={this.props.title} />
+          togglePersonHandler={this.togglePersonHandler} title={this.props.title} /> ) : null 
+        }
         {persons}
       </div>
     );
