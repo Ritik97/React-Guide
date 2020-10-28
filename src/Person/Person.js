@@ -6,6 +6,7 @@ import classes from './Person.css';
 class Person extends Component{
 
     render() {
+        console.log('[Person.js] render');
         return (
             <div className={classes.Person}>
                 <p onClick={this.props.deletePersonHandler}>My name is {this.props.name} </p>
