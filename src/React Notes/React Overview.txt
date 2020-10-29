@@ -1,0 +1,191 @@
+
+------------------------React Basics------------------------
+
+1.React is a lightweight javascript library which runs on the browser. It is used to build complex user-interfaces by splitting
+them into small reusable components.
+
+2.React uses JSX, a syntactical sugar for javascript, to build these components.
+
+3.It needs two packages:- a.React - which is the logic behind creating these components. b.REACTDOM - to render these elements 
+into the DOM. It has as render method which converts a js function or class into a react component and render it to the real DOM.
+
+4.React also requires babel; a preprocessor to compile all the next-gen/ES6 into code which runs fine in all browsers.
+Babel is a toolchain that is mainly used to convert next-gen js code into a backwards compatible version of JavaScript in 
+current and older browsers or environments. It also converts jsx into js.
+
+5.Every react component is essentially a javascript class or function which is passed to the REACTDOM.render(); along with a
+ref to the hook where the component will get rendered. ex- REACTDOM.render( <Person />, document.querySelector('#hook-1') );
+
+6.React gives us an arguement in the function, which we had turned into a component using REACTDOM.render() i.e. props.
+Props contain all the attributes which is added to the component. ex- <Person name='Ritik' age='23' />
+We can then access these attributes like <h1> Name: {props.name} </h1>.
+
+7. It is advisible to use a single REACTDOM.render() call per component. If needed to render a component more than once,
+use a variable to store all the components call and pass it to REACTDOM.render() 
+
+ex- let persons = (
+	<div> 
+		<Person name='Ritik' age='23' />
+		<Person name='Ashish' age='32' />
+		<Person name='Shreya' age='22' />
+	</div>
+); 
+
+Note:- JSX doesn't allow adjecent elements. So, we wrapped it with a div.
+Note:- JSX is always wrapped by a () and plain js with {}
+
+8.In a single-page app, every component is a react component and the entire page is also managed by a root react component; 
+which is under React's control. Therefore, in case of single-page applications, we just have a single REACTDOM.render() call,
+to render the root component and all other components will get rendered under it.
+
+9.In multi-page application, we have to call REACTDOM.render() whereever we want to render the component into our page. 
+
+
+
+
+------------------------Why React?------------------------
+
+1.The UI state in bigger applications becomes difficult to manage with vanilla js as we have to manually target the elements
+in the DOM and then if later we change the structure of our HTML code, chances are we need to change the way we target the 
+elements. Even with jQuery, it can become cumbersum to add or remove elements dynamically too often, in large applications.
+
+2.With React, It becomes easy to develop applications which are highly dynamic as the UI state management becomes a non-issue
+and we just have to focus on our business logic.
+
+3.In a single-page application, we don't have to reload the page everytime from the server. Everything happens on the 
+browser-side instantly. 
+
+
+
+
+------------------------Using a Build Workflow------------------------
+
+1.In reality, React is alot more than the two packages which we had talked about. While building a SPA or MPA, we need a more
+complex workflow. But why??
+
+a.While building bigger react applications, we need our code to be as optimized as possible in order to increase the
+performance of the app.  
+
+b.To use all the next-gen features, so that the code is clean, easier to read and less error prone.
+
+c. CSS auto prefixing, to render css styles across all browsers similarly
+
+2. Now the question is How to achieve this complex workflow??
+a. We use a dependency management tool like npm or yarn.
+b. We use a bundler like Webpack as we write modular code with small files, focued on a specific task. Bundler then bundles
+all these tiny files and ship it.
+c.We use compiler like Babel, for next-gen compatiblity, which could be hooked upon the builder.
+d. We use a development server to emulate the working of the app on the real server.
+
+
+
+
+------------------------Components and it's State------------------------
+
+1. Props are the properties we pass to a component from outside, while calling it. It can also include a function.
+
+2. State is an js object which consist of a single or a set of properties which are handled from within a component.
+
+3. A class based component always extendes the Component class. This class has a render() which returns the JSX code.
+
+4. Only two things can make a component to re-render, i.e. change is props (or) change in state.
+
+5. In a class based component, state is just a property of the class, which is a js object. ex - state = { .... }. We can then 
+ access the properties of state object using this.state.propertyname.
+ 
+6. We can update the state whenever required, using this.setState({ ... }) 
+
+7. From react 16.8 and above, we can also use state inside functional components. To use state inside a functional component,
+ we have to import the 'useState' hook, instead of Component, along with 'React'. We can then use useState function to set our 
+ initial state. ex- useState({ ...Properties })
+ 
+8. This useState returns an array with two elements. The 1st element will always be our current state and 2nd element is the
+ function which allows us to update the current state. ex= const [personState, setPersonState] = useState({
+																										name: 'Ritik', 
+																										age: 23     });
+																										
+9.Now, for accessing the state properties, instead of this.state, we will use personState.propertyName.
+ Q. What about the methods????
+ => We can add function inside a function not only in React, but also in js in general. We can call these inner methods just
+ by its name ex=> onClick = {nameChangeHandler}. 
+ 
+10. For updating the state then, instead of this.setState({}), we will use setPersonState({ ...New Properties })
+
+11. There is, however, a catch in this: While this.setState({}) only change the existing properties for which new values are
+ set, and donot  touch other state properties, the 2nd method actually overwrites the existing state which means the properties 
+ which we didn't update, has to be added again manually, while updating the state. 
+
+12. Instead of manual merging, this catch could be handled easily by using the useState({}) multiple times; as every useState() 
+ gives us a method to update it, we can simply use that particular method to update its corresponding state and the other states 
+ won't be touched while beign updated. 
+
+13. So to summerise, React has 2 types of components, statefull and stateless(presentational). While statefull components manages
+ state in it; presentational components just take some input and return some JSX or call other components.
+ It is advisible to use more stateless components and less statefull components. This makes it easier to manage the data flow.
+
+14. Two-way data binding is possible in components i.e. we can both send and receive data in a component. 
+
+14.a If an argument has to be passed to a handeler from inside a Component call, we can pass it like:
+	onClick={ () => nameChangeHandler('Ritik') }
+
+
+
+
+------------------------Styling Components------------------------
+
+15. We can define styles of a component in a separate css file and then import it in the js file ex- import './Person.css' 
+and then className={Person}. But this is a global style which means if we style a button element, all the buttons in our app will 
+get that style which is not very ideal.
+
+16. We can also use inline styles by defining a style object inside render() and then set it to style property on the element.
+ex- style = {style}. However, adding pseudo class like :hover or :active would be difficult here. Since style is an object,
+we can always set a new property on it, or modify the existing one, one the fly. if(condition) { style.color = '#f0f' }.
+This proves that at the end, everything is js.
+
+16.a We can even set class to an element dynamically. 
+ex- let classes = []
+if(condition) 
+	classes.join('Red') ['Red']
+if(condition)
+	classes.join('Bold') ['Red', 'Bold']
+
+<button className={classes.join(' ')} /> Red Bold
+
+17. 'Radium' is a 3rd party npm package with which, we can use pseudo selectors and media queries on inline styles.
+
+18. CSS Modules is however a very vital functionality with which we can write css in a separate file and still scope it to
+	a particular component only, and not globally. To enable it, run npm run eject and then inside the config->dev.js
+	'test:/\.css$/' add modules: true, and also inside config->prod.js
+                  localIdentName: '[name]__[local]__[hash:base64:5]'
+
+19. Now we can import our css file in a different way ex-> import classes from './App.css'. Here, classes is an object and 
+	could be named anything. This object will contain all the classes of 'App.css' file as a property and could be accessed 
+	as classes.classname.
+	
+
+
+
+------------------------Working with Lists and Conditional Outputs------------------------
+
+17. We can interject js in our js code simply by wrapping it with  { }.
+
+18. Ternary operator can be used to conditionally render an element or group of elements.
+	ex=> { this.state.togglePerson ? rendered elements : null }
+	However, adding more and more ternary expressions could make the code messy. So, inside the render(), will use a variable 
+	to store the to be rendered elements, if condition is true. Else it will have null. And then add the variable inside the
+	return(). ex- {person}
+	
+19. Lists should always be rendered in a dynamic way. In our app, Person is a list in our state, holding 3 objects. Thus far,
+	we are simply accessing the list items by hardcoding its index no [1],[2]. which isn't a dynamic way to output a list.
+	
+20. Instead, we can use the map method on our list i.e. this.state.Persons.map(person => return <Person name={person.name} />)	
+	to output the list in a dynamic way by returning the JSX.
+	
+21. States should always be updated in in-mutable fashion i.e. create a copy, change it and then update the original state
+	using setState()
+	
+22. Keys:- While outputting a list of data, React expects a key prop on the list component,both for custom components and
+	html element. But why??
+		React by default doesn't know about the elements in the list. So, even if a single element changes, it will re-render the
+		the whole list, which would be super in-efficient in case of long list.
+		The key should always be uniqe and must be present inside any list in our state. It can be the id for expample.

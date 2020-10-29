@@ -1,0 +1,232 @@
+---------------------------A better Project structure---------------------------
+
+1. Thus far, everything in our project is working great. Still we can try and improve our project structure. For ex- Our App
+	component is involved in too much JSX rendering, however it is advisible to keep our Container component(component which
+	manages state) lean i.e. it should only render the other components and contain JSX code to a minimum extent.
+	
+2. How to decide splitting of components??
+	=> There is no hard and fast rule to decide that. Basically if an element is not going to be used more than once, it 
+	should be grouped in a component. Ex- Suppose there is a div with few paragraps and an input element and we need a generic
+	input element in multiple places of our app, with diff styles, it would be better to put input element in its own component
+	and use it whereever needed. Otherwise, it doesn't make much sense to make input, a component.
+	a. Here, In our app, inside the render(), we are rendering a list of 'Person' component. We can split this and make a 
+	'Persons' component and simply pass our 'this.state.Persons' to the 'Persons' component then render the list of 'Person' 
+	component for us. Then, we simply have to include the 'Persons' components in our 'App' component. This way, We won't have 
+	to write all that JSX in our App component. 
+	b. In our 'App' component, we also have 2 heading and one button element at the top. These again, can be kept inside a 
+	separate component. By this, our Statefull 'App' component will become more clean and could focus only on the business 
+	logic rather than rendering the JSX.
+
+3. Its highly advisible to keep our Dumb components and Statefull components separate. By this, our application becomes more 
+	predictible as we know the data flow and where it is getting changed. Rest of the Dumb components are just presentational
+	components which simply render the JSX and could be thrown anywhere in our app. However, the no. of statefull components
+	increases with the size of our app.
+	
+
+
+
+---------------------------Class based vs Functional Components---------------------------
+
+4. Since React 16.8, even functional components can manage state within them, using the 'useState' hook.
+	However, the 'lifecycle hooks' are still can be managed only inside the Class based components.
+	Class based components - this.state.XY (or) this.props.XY
+	Function based components - props.XY	
+	
+	
+	
+	
+---------------------------Component Lifecycle---------------------------	
+
+5. There are a set of lifecycle functions which we can use inside our class based components, which will get executed 
+	by react at a certain point of time, to perform tasks like fetching data from the web or doing some clean-up work
+	before the component gets removed from the DOM.
+	
+	a. Component Lifecycle - Creation
+	
+	1. When the class-based component is created, first of all the 'constructor' gets executed, which is not a lifecycle hook 
+	but instead a default 'ES-6' class feature. This constructor will receive the 'props' of the component and we will have 
+	to call 'super(props)', but only if we use a constructor. 
+	In the constructor, we can do basic initialization work, like setting initial state and so on. 
+	What we shouldn't do here is causing side-effect for ex- making http request, storing something in the browser or sending
+	some google analytics, coz these can impact performance and create unnecessary re-render cycles. If want to set initial 
+	state based on props, use constructor.
+	
+	2. After the constructor, getDerivedStateFromProps(props, state) gets executed. This can be used when we want to sync
+		our internal state of the component with the change in props. But this is hardly used. Here also, we shouldn't do the 
+		stuffs which aren't advisible for constructors.
+	
+	3. After that, the render() gets executed, which should mainly return only the JSX and. Here also, we shouldn't do the 
+		stuffs which aren't advisible for constructors or anything which blocks our rendering process.
+		
+	4. After render(), the other components inside the render() will get executed.
+	
+	5. Only after all the lifecycle hooks of the child components gets finished, main component's lifecycle hooks gets finished,
+		'componentDidMount()' gets called. This is the most used lifecycle hook for class-based components and here we can
+		do stuffs which can cause side-effect, like making an http request, saving data to browser or sending some analytics
+		to google. Here, we should not set new state synchronously. However, we can use setState() inside the 'then' block
+		of a promise.
+	
+	
+	b. Component Lifecycle - Updation
+	
+	Similar to creation, we also have lifecycle hooks for Updation.
+	Props and State are the two things which triggers the re-evaluation of a Component. If any of them changes, we go 
+	through a diff. set of lifecycle hooks. 
+		
+	1. The first hook in this set then would be 'getDerivedStateFromProps(props, state)'. This could be used to update the 
+	   state of an updated component, based on the props we are getting. This hook is not used much often. Don't use any 
+	   side effects.
+	
+	2. 2nd hook to execute would be 'shouldComponentUpdate(nextProps, nextState)'. This is a very vital hook as in-here,
+	   react decides whether to evaluate a component for updation or not. It should be used to avoid unnecessary update 
+	   cycles which also optimizes the performance. Returns 'true' to update and 'false' to not update.
+	   
+	3. After that, the mighty render() gets called, which contains the JSX code and React construct a virtual DOM based on that.
+	
+	4. Then, all the child component gets called and they also go through all these hooks if they receive 'new props or state.'
+	
+	5. After that, 'getSnapshotBeforeUpdate(prevProps, prevState)' gets called. This takes previous state and previous props 
+		as input and return a snapshot object which can be configured. This again isn't used much. We can use it for tasks like,
+		getting the scrolling position of the user before the updation. Changes to the DOM shouldn't be made here.
+		
+	6. Last is 'componentDidUpdate()' which executes once the updation is finished and the render method is executed. Here,
+		we can cause side-effects like making an http req. Don't call 'setState()' outside of then block of a promise here.
+		
+6. As mentioned above, lifecycle hooks can't be used in functional components. An alternate to these hooks is 'useEffect'.		
+		'useEffect' includes all the usecases which are provided by the lifecycle hooks. It takes a function as argument
+		which executes for every render cycle; which means it is a combination of componentDidMount() and componentDidUpdate()
+		We don't have other usecases available here, like 'getDerivedStateFromProps()', but we really dont need it here.
+		To set state based on props, we can simply use 'useState()'.
+
+	Note:- useEffect() could be little tricky to work with as it executes on every render cycle. What if we want to make an
+			http request only for when, then component is created for the first time?????
+			
+			Ans:- In that case, we can pass a 2nd argument to useEffect(), which is an array. This array will contain the
+			data which when changes, 'useEffect' will execute. Ex- [props.persons].
+			If we are to pass more than one data, we can use 'useEffect' multiple times.
+		Note:- By default, when a component gets re-rendered, all its child also gets re-rendered. It is through lifecycle 
+			hooks (or) 'useEffect()' by which we control this behaviour.
+	
+	If we want 'useEffect' to execute only for the 1st time, will have to pass an empty array [] as an argument to 'useEffect'.
+	
+
+
+
+---------------------------Cleanup Work using lifecycle hook and useEffect---------------------------		
+
+7. Cleanup Work is a task we perform just before a component gets removed from the DOM. Ex- unsetting the event listeners
+	on that component. For a class based component, we could use 'componentWillUnmount()'.	
+	For functional components however, we will return an anonymous function which will contain the clean-up code, or anything
+	which we want to do just before the component gets destroyed. 	
+		
+	V.V.I :- The behaviour of this anonymous function is a bit tricky as it depends on the 2nd argument passed to the
+	'useEffect'.
+	a. If an empty array is passed to 'useEffect', this anonymous function will execute just before the component gets destroyed.
+	b. If no argument is passed, anonymous function will execute for every render cycle, before the main 'useEffect' code,
+	even when the component doesn't gets destroyed. 
+	c. If any argument is passed to the [], the anonymous function will execute everytime, when that data gets changed,
+	before the main 'useEffect' code. However, the anonymous function won't have any affect on the execution pattern of main 
+	'useEffect' and it will always execute as it should.
+	
+	
+	
+	
+---------------------------Optimize updation of class and function based components---------------------------
+
+	Q. What is wrong with the shouldComponentUpdate()?
+	Ans=> As of now, it simply returns true, which means the components 'Persons' and 'App' will simply get re-rendered whenever
+	any props or state changes in them. The 'Persons' component however gets re-rendered automatically, even when something 
+	changes in the 'App' component coz its a child component of 'App'; and in React, the child component gets re-rendered 
+	by default, everytime its Parent component gets re-rendered.
+	
+	For functional components, we can use 'export default React.memo()' and pass our component into it. Then, our component
+	will re-render only when any props passed to it changes. 
+	
+	Note:- There will be some components which have to be re-rendered everytime its parent component gets re-rendered. 
+	Therefore, its not advisible to use 'shouldComponentUpdate()' and 'React.memo()' in every component blindly.
+	
+	Note:- Sometimes, we have to check for changes in all the props passed to a component. Then, instead of manully checking 
+	all the props in 'shouldComponentUpdate()'; our class component will extend 'PureComponent' instead of Component.
+	Then 'shouldComponentUpdate()' will be added automatically with checks on all props.
+	
+	
+	
+	
+---------------------------Rendering Adjecent JSX Elements---------------------------
+
+8. We always need a wrapping element while returning JSX as React by defalut can't render more than one element or 
+	component at one time. However, it can return a list of elements or components ( [ ] ) with the 'key' prop included in that.
+	Therefore, when we don't need a wrapping element from html or css point of view, we won't necessarily have to add one. 
+	
+	Beside returning a list of adjecent elements, we also have an alternative to it, i.e. 'HOC'.
+	A higher order component is a plain component, which doesn't contain any JSX but is there to simply fulfill the requirement
+	of having a wrapping element. It simply returns 'props.children'.
+	'<React.Fragment>' is another built-in HOC which we can use.
+	We can also create a custom HOC. Ex- A component which returns a div with css class added to it.
+	We can also make a custom HOC which handles error handling and wrap it to the components which makes an http request.
+	
+	
+	1. const aux = props => props.children;
+	2. const withClasses = props => {
+		return <div className={props.classes}> {props.children} </div>
+	};
+	3. const aux = (WrapperComponent, class) => {
+		return props => (<div className={class}> <wrapperComponent /> </div>)
+	};
+
+
+
+
+---------------------------Setting State Correctly---------------------------	
+
+9. Even though we call 'this.setState()' synchronously, it is not guaranteed to execute immediately. Therefore, if we are using
+	'this.setState()' (which depends on previous state) at multiple places at same time, chances are, we might not get the 
+	correct updated state. In that case, instead of passing an object, we would pass an anonymous arrow function to 'setState'
+	with 2 parameters i.e. prevState and props, which will then return an object.
+	ex= this.setState((prevState, props) => {
+	return {
+		changeCounter = prevState.changeCounter + 1
+		}
+	})
+	
+	This is only for when we depend on prev state, while setting on new one.
+	 
+	 
+	 
+	 
+---------------------------Using PropTypes---------------------------
+
+10. In bigger applications, where multiple developers are working together, is becomes essential to know the type of the props
+	one is using (which might have been set by the other dev), in order to handle it correctly. Ex- One dev might have set 
+	an age prop to be a string, and if the other one tries to perform any math calculation to it, it will give unexpected
+	result.
+	After installing and importing 'prop-types', and after defining our class or functional component, we will add an
+	object 'propTypes' to it. 
+	Ex- Person.propTypes = {
+		name: propTypes.string, 
+		age: propsTypes.number,
+		nameChangeHandler: propsTypes.func
+	};
+	 By this, React will always look for these props with there specified types been passed to the component.
+	 
+	 
+	 
+	 
+---------------------------Using Refs---------------------------
+
+In normal DOM, we could select a particular element by using diff selectors based on class-name, id etc. 
+In React however, these selectors won't work as expected. Therefore, we have a React way of selecting elements i.e. 'refs'.
+
+
+
+
+---------------------------props chaining problem---------------------------
+
+11. Sometimes, we need to pass some info to component C from component A, which doesn't have direct access to component C.
+	But component A has access to component B, and component B has access to C. Then, to pass some data to C, from A; we 
+	always have to pass it through component B. This is called props chaining problem because as in large application,
+	the chain could grow very large, thus making the flow of data difficult to trace.
+	
+	Sol:- Context API
+  
+
