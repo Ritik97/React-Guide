@@ -8,19 +8,19 @@ class Persons extends Component {
         console.log('[Persons.js] Constructor');
     };
 
-    static getDerivedStateFromProps(props, state) {
-        console.log('[Persons.js] getDerivedStateFromProps', props);
-        return state;
-    };
+    // static getDerivedStateFromProps(props, state) {
+    //     console.log('[Persons.js] getDerivedStateFromProps', props);
+    //     return state;
+    // };
 
     shouldComponentUpdate(nextProps, nextState) {
         console.log('[Persons.js] shouldComponentUpdate');
-        if(nextProps.persons !== this.props.persons) {
+        if (nextProps.persons !== this.props.persons) {
             return true;
         } else {
             return false;
         }
-        
+
     };
 
     getSnapshotBeforeUpdate(prevProps, prevState) {
