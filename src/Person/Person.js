@@ -5,6 +5,10 @@ import classes from './Person.css';
 
 class Person extends Component{
 
+    componentDidMount() {
+        this.inputElement.focus();
+    };
+
     render() {
         console.log('[Person.js] render');
         return (
@@ -12,7 +16,9 @@ class Person extends Component{
                 <p onClick={this.props.deletePersonHandler}>My name is {this.props.name} </p>
                 <p>My age is {this.props.age} </p>
                 <p> {this.props.children} </p>
-                <input onChange={this.props.nameChangeHandler} value={this.props.name}></input>
+                <input onChange={this.props.nameChangeHandler} 
+                value={this.props.name} type='text' 
+                ref={(inputEle) => this.inputElement = inputEle } ></input>
             </div>
         );
     };
